@@ -1,19 +1,11 @@
 import { gameMaster } from "./main.js";
-import { GameObject } from "./gameObject.js";
-import { initCollectables, collectables } from "./collectable.js";
-import { initStaticObstacles, staticObjects } from "./staticObstacle.js";
-import { getRandomInt } from "./utils.js";
+import { collectables } from "./collectable.js";
+import { staticObjects } from "./staticObstacle.js";
+import { obstacles } from "./obstacle.js";
+import { obstacleMove } from "./animator.js";
 import * as gameLoop from "./gameLoop.js";
 
 export let ctx = document.getElementById("gameWindow").getContext("2d");
-
-export let obstacles = [];
-
-export function initObjects() {
-    initObstacles();
-    initStaticObstacles();
-    initCollectables();
-}
 
 export function drawGameObjects() {
     for (let key in collectables) {
@@ -22,7 +14,7 @@ export function drawGameObjects() {
     }
     for (let key in obstacles) {
         drawEntity(obstacles[key]);
-        gameLoop.obstacleMove(obstacles[key]);
+        obstacleMove(obstacles[key]);
         gameLoop.collideWith(obstacles[key]);
     }
     for (let key in staticObjects) {
@@ -65,24 +57,6 @@ function resizeCanvas() {
     ctx.width = window.innerWidth;
     ctx.height = window.innerHeight;
 }
-
-//gameObject initializations on game start
-function initObstacles() { //if statements to initialize same code for different rows to create full layout
-    let laneSpawn1 = [96, 160, 192, 224, 451, 483, 515, 547, 288, 320, 352, 384];
-    for (var i = 0; i < laneSpawn1.length; i++) {
-        let temp = Math.round(Math.random() * 100) + 1;
-        let computerResponse = getRandomInt(5, 8);
-        let obstacle;
-        if (temp < 50) {
-            obstacle = new GameObject(64, 64 * computerResponse, 64, 64, Math.round(Math.random() * 576), laneSpawn1[i], Math.floor(Math.random() * 3) + 1, 32, 32);
-        } else {
-            obstacle = new GameObject(64 * 3, 64 * computerResponse, 64, 64, Math.round(Math.random() * 576), laneSpawn1[i], Math.floor(Math.random() * 3) + 1, 32, 32);
-        }
-        obstacles.push(obstacle);
-    }
-}
-
-
 
 export function updateUIElements() {
     document.getElementById('lives').innerHTML = gameMaster.lives;

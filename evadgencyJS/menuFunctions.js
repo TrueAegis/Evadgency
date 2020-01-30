@@ -42,4 +42,6 @@ function timer() {
         updateUIElements();
     }
 }
+
+
 //Pause Function Moved To gameLoop isPause() method

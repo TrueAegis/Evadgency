@@ -1,6 +1,10 @@
 import * as render from "./renderResources.js";
 import * as gameLoop from "./gameLoop.js";
 import { player } from "./player.js";
+import { initCollectables } from "./collectable.js";
+import { initStaticObstacles } from "./staticObstacle.js";
+import { initObstacles } from "./obstacle.js";
+import { animateGameObjects } from "./animator.js";
 
 var gameStart,
     timeSet
@@ -27,7 +31,9 @@ export var gameMaster = {
 
 //initialize after pages load.
 function initialize() {
-    render.initObjects();
+    initObstacles();
+    initStaticObstacles();
+    initCollectables();
     update();
 }
 
@@ -38,7 +44,41 @@ function update() {
     render.drawBG();
     render.drawEntity(player);
     render.drawGameObjects();
-    gameLoop.animateGameObjects();
+    animateGameObjects();
     gameLoop.checkWin();
     gameLoop.checkLose();
+}
+
+export function checkWin() {
+    var winPos = [32, 96, 160, 224, 288, 352, 416, 480, 544];
+
+    // Checks for win conditions
+    if (player.y == 64 && winPos.includes(player.x)) {
+        new gameObject(staticObjects, "staticObject", 'sprites/spritesheet.png', player.sx, player.sy, player.srcW, player.srcH, player.x, player.y, null, player.width, player.height);
+        player.x = 320;
+        player.y = 576;
+        gameMaster.score += 100;
+        gameMaster.victoryPoints--;
+    } else if (gameMaster.victoryPoints == 0) {
+        isPause();
+        document.getElementById("next").className = "button";
+        document.getElementById("resume").className = "hidden";
+        document.getElementById("start").className = "hidden";
+        document.getElementById("wrapper").style.display = "flex";
+    }
+}
+
+export function checkLose() {
+    if (gameMaster.lives == 0 || gameMaster.time <= 0) {
+        isPause();
+        document.getElementById('time').innerHTML = "Game Over";
+        setTimeout(function () {
+            //Game Over Screen 
+        }, 5000);
+    }
+}
+//pause game
+export function isPause() {
+    cancelAnimationFrame(gameStart);
+    clearInterval(timeSet);
 }
