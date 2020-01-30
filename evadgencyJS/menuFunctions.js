@@ -33,4 +33,13 @@ function howto() {
     alert("Use arrow keys to move character.\nAvoid moving and stationary obstacles.\nCollect coins as you progress.\nReach the end of the level before your time runs out!");
 };
 
+function timer() {
+    timeSet = setInterval(countDown, 1000);
+
+    function countDown() {
+        gameMaster.time--;
+        //console.log(gameMaster.time);
+        updateUIElements();
+    }
+}
 //Pause Function Moved To gameLoop isPause() method
