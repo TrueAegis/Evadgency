@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Evadgency</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel='icon' href='./favicon.ico?' type='image/x-icon'>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
@@ -15,32 +16,33 @@
     <div id="wrapper">
         <div id="main">
             <img id="logo" src="./sprites/logo.png" alt="logo">
-            <button onclick="start()" class="button" id="start">Start Game</button>
-            <button onclick="resume()" class="hidden" id="resume">Continue</button>
-            <button onclick="nextLevel()" class="hidden" id="next">Start Next Level</button>
-            <button onclick="howto()" class="button" id="how">How to Play</button>
+            <button class="button" id="start">Start Game</button>
+            <button class="hidden" id="resume">Continue</button>
+            <button class="hidden" id="next">Start Next Level</button>
+            <button class="button" id="how">How to Play</button>
+            <a href="https://forms.gle/qzGjwtB8tAim7NJ96" target="_blank"><button class="button" id="feedback">Give Feedback</button></a>
             <button onclick="javascript:window.close('','_parent','');" class="button" id="exit">Exit</button>
         </div>
     </div>
-    <div id="uiWrapper">
-        <div id="ui">
-            <span class="title">Lives x </span>
-            <span class="value" id="lives"></span>
-            <span class="title">Coins x </span>
-            <span class="value" id="coins"></span>
-            <span class="title">Time:</span>
-            <span class="value" id="time"></span>
-            <span class="title">Score:</span>
-            <span class="value" id="score"></span>
-            <span>Difficulty:</span>
-            <span id="difficulty"></span>
-        </div>
+  </div>
+  <div id="uiWrapper">
+    <div id="ui">
+      <span class="title">Lives x </span>
+      <span class="value" id="lives"></span>
+      <span class="title">Coins x </span>
+      <span class="value" id="coins"></span>
+      <span class="title">Time:</span>
+      <span class="value" id="time"></span>
+      <span class="title">Score:</span>
+      <span class="value" id="score"></span>
+      <span>Difficulty:</span>
+      <span id="difficulty"></span>
     </div>
-    <canvas id="gameWindow" width="640" height="640" style="border: 1px solid #000000;"></canvas>
-
+  </div>
+  <canvas id="gameWindow" width="640" height="640" style="border: 1px solid #000000;"></canvas>
+<script type="module" src="Evadgency_JS/gameLoop.js"></script>
+<script type="module" src="Evadgency_JS/menuFunctions.js"></script>
 </body>
-<script type="text/javascript" src="renderResources.js"></script>
-<script type="text/javascript" src="gameLoop.js"></script>
-<script src="menuFunctions.js"></script>
+
 
 </html>
