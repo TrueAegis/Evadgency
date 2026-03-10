@@ -1,7 +1,10 @@
+// This module manages the main game loop, state, input handling, collision detection, and win/lose logic.
+// It coordinates rendering, animation, and UI updates for the legacy version.
+
 var gameStart,
     timeSet,
     ctx = document.getElementById("gameWindow").getContext("2d");
-//GameMaster Object - Holds important game values
+// GameMaster Object - Holds important game values
 var gameMaster = {
     difficulty: 1,
     score: 0,
@@ -30,7 +33,7 @@ function timer() {
     }
 }
 
-//intialize after pages load.
+// Initialize after pages load.
 function initialize() {
     initObjects();
     update();
@@ -48,6 +51,7 @@ function update() {
     checkLose();
 }
 
+// Animate game objects: cycle collectable sprites
 function animateGameObjects() {
     gameMaster.ticks += 1;
     if (gameMaster.ticks > gameMaster.ticksPerFrame) {
@@ -62,12 +66,13 @@ function animateGameObjects() {
     }
 }
 
-//controllers
+// Event listener for keyboard input to control player movement and actions
 document.addEventListener("keydown", playerController, false);
 
 function playerController(e) {
     castRay();
     console.log(castRay());
+    // Move up (arrow up), check bounds and game state
     if (e.keyCode == 38 && player.y > 16 && gameMaster.gameOn == true) {
         player.y = player.y - player.spd;
         player.sx = 0; // up
@@ -82,12 +87,14 @@ function playerController(e) {
         player.sx = 320; // right
     }
 
+    // Press P to cycle player avatar sprites
     if (e.keyCode == 80) { //Press P to select a different avatar
         player.sy += 64;
         if (player.sy > 64 * 4) {
             player.sy = 64;
         }
     }
+    // Press Esc to pause/unpause game
     if (e.keyCode == 27) { //Press Esc to pause game
         if (gameMaster.gameOn == true) {
             gameMaster.gameOn = false;
@@ -107,6 +114,7 @@ function playerController(e) {
     console.log(player.x + " - " + player.y);
 }
 
+// Move obstacles horizontally based on their type (left or right)
 function obstacleMove(obstacle) {
     if (obstacle.gameObjectType == "obstacleRight") {
         if (obstacle.x < gameWindow.width + 100) {
@@ -123,11 +131,12 @@ function obstacleMove(obstacle) {
     }
 }
 
-//Colliders
+// Collision detection function: checks if player overlaps with an object and handles consequences
 function collideWith(object) {
 
     if (player.x <= object.x + object.width / 2 && player.x >= object.x - object.width / 2 && player.y <= object.y + object.height / 2 && player.y >= object.y - object.height / 2) {
         if (object.gameObjectType.includes("obstacle")) {
+            // Hit obstacle: lose a life, reset player position briefly
             gameMaster.lives -= 1;
             player.sx = 64 * 4;
             player.sy = 64 * 5;
@@ -143,6 +152,7 @@ function collideWith(object) {
             document.getElementById('lives').innerHTML = gameMaster.lives;
 
         } else if (object.gameObjectType.includes("collectable")) {
+            // Collected coin: remove from array, increase score and coins
             collectables.splice(collectables.indexOf(object), 1);
             gameMaster.coins += 1;
             gameMaster.score += 1;
@@ -156,6 +166,7 @@ function collideWith(object) {
     }
 }
 
+// Ray casting function (incomplete): intended to check for collisions ahead of movement
 function castRay() {
     // rayCast right,left,down,up
     var rayCast = [player.x + player.spd, player.x - player.spd, player.y + player.spd, player.y - player.spd];
@@ -170,7 +181,7 @@ function castRay() {
     }
 }
 
-// win/lose states
+// Check win conditions: player reaches top row at specific x positions to score victory points
 function checkWin() {
     var winPos = [32, 96, 160, 224, 288, 352, 416, 480, 544];
 
@@ -182,6 +193,7 @@ function checkWin() {
         gameMaster.score += 100;
         gameMaster.victoryPoints--;
     } else if (gameMaster.victoryPoints == 0) {
+        // All victory points collected: pause and show next level menu
         isPause();
         document.getElementById("next").className = "button";
         document.getElementById("resume").className = "hidden";
@@ -190,6 +202,7 @@ function checkWin() {
     }
 }
 
+// Check lose conditions: no lives or time up triggers game over
 function checkLose() {
     if (gameMaster.lives == 0 || gameMaster.time <= 0) {
         isPause();
@@ -199,7 +212,8 @@ function checkLose() {
         }, 5000);
     }
 }
-//pause game
+
+// Pause the game by stopping animation and timer
 function isPause() {
     cancelAnimationFrame(gameStart);
     clearInterval(timeSet);
