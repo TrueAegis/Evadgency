@@ -1,15 +1,21 @@
 
+// This module handles rendering and canvas operations.
+// It provides functions to initialize objects, draw entities, and render the background.
+
 import { initObstacles, initStaticObstacles, initCollectables, collectables, staticObjects, obstacles } from "./gameObjects.js";
 import { collideWith } from "./gameLoop.js";
 
+// Get the 2D rendering context from the game canvas
 export let ctx = document.getElementById("gameWindow").getContext("2d");
 
+// Initialize all game objects (obstacles, static obstacles, collectables)
 export function initObjects() {
     initObstacles();
     initStaticObstacles();
     initCollectables();
 }
 
+// Draw all game objects and check for collisions with each
 export function drawGameObjects() {
     for (var key in collectables) {
         drawEntity(collectables[key]);
@@ -24,16 +30,18 @@ export function drawGameObjects() {
         collideWith(staticObjects[key]); // should move this
     }
 }
-//Draws game object sprites
+
+// Draw a single entity (sprite) on the canvas using its properties
 export function drawEntity(entity) {
     ctx.save();
     ctx.drawImage(entity.sprite, entity.sx, entity.sy, entity.srcW, entity.srcH, entity.x, entity.y, entity.width, entity.height);
     ctx.restore();
 }
 
-//Draw level
+// Handle canvas resizing on window resize
 window.addEventListener("resize", resizeCanvas, false);
 
+// Draw the level background using tiled patterns for carpet and textures
 export function drawBG() {
     //Tiling
     let tile = new Image();
@@ -54,6 +62,7 @@ export function drawBG() {
     ctx.fillRect(0, 0, window.innerWidth, 100);
 }
 
+// Resize the canvas to match window dimensions
 function resizeCanvas() {
     ctx.width = window.innerWidth;
     ctx.height = window.innerHeight;

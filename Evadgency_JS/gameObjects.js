@@ -1,12 +1,17 @@
+// This module defines game objects, including the player, obstacles, collectables, and static objects.
+// It provides constructors and initialization functions for populating the game world.
+
 import { gameMaster, timer, updateUIElements, update } from "./gameLoop.js";
 import { initObjects } from "./renderResources.js";
 import { rollChance, getRandomInt } from "./util.js";
 
+// Arrays to hold different types of game objects
 export var obstacles = [],
     collectables = [],
     staticObjects = [];
 var laneSpeed;
 
+// Player object with sprite, position, and movement properties
 var img = new Image();
 img.src = 'sprites/spritesheet.png';
 export var player = {
@@ -22,6 +27,7 @@ export var player = {
     spd: 32
 };
 
+// Constructor for creating game objects (obstacles, collectables, etc.)
 export function gameObject(gameObjectArray, gameObjectType, img, sx, sy, srcW, srcH, x, y, spd, width, height) {
 
     var gameObjectImg = new Image();
@@ -41,6 +47,7 @@ export function gameObject(gameObjectArray, gameObjectType, img, sx, sy, srcW, s
     gameObjectArray.push(this);
 }
 
+// Initialize moving obstacles based on difficulty (spawn in lanes, random direction and speed)
 export function initObstacles() {
     var laneSpawn = [96, 160, 192, 224, 451, 483, 515, 547, 288, 320, 352, 384];
     if (gameMaster.difficulty === 1) {
@@ -59,6 +66,7 @@ export function initObstacles() {
         }
     }
 
+    // Helper to increase obstacle spawn count with difficulty
     function increaseSpawn(input) {
         console.log("GameDifficulty: " + input);
         var result = input / 5;
@@ -71,6 +79,7 @@ export function initObstacles() {
     console.log(increaseSpawn(gameMaster.difficulty));
 }
 
+// Initialize static obstacles (desks, walls) at fixed positions with some randomness
 export function initStaticObstacles() {
     var staticSpawn = [
         [32, 416], [128, 416], [256, 416], [320, 416], [416, 416], [512, 416],
@@ -96,6 +105,7 @@ export function initStaticObstacles() {
     new gameObject(staticObjects, "staticObject", 'sprites/spritesheet.png', 64 * 7, 64, 64, 64, 608, 64, null, 32, 32); // patty
 }
 
+// Initialize collectables (coins) in specific lanes with low spawn chance
 export function initCollectables() {
     var laneSpawn = [192, 320, 448];
     for (var i = 0; i < laneSpawn.length; i++) {
@@ -105,6 +115,7 @@ export function initCollectables() {
     }
 }
 
+// Advance to the next level: increase difficulty, reset objects, restart game loop
 export function nextLevel() {
     gameMaster.gameOn = true;
     gameMaster.difficulty += 1;

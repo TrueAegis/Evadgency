@@ -1,8 +1,12 @@
+// This module handles animations for game objects.
+// It cycles through sprite frames for collectables and moves obstacles.
+
 import { collectables, obstacles } from "./gameObjects.js";
 
 var ticks = 0; //records ticks in the loop, resets if greater than ticksPerFrame
 var ticksPerFrame = 12; //controls animation speed
 
+// Animate game objects: cycle collectable sprites and move obstacles
 export function animateGameObjects() {
     ticks += 1;
     if (ticks > ticksPerFrame) {
@@ -17,10 +21,11 @@ export function animateGameObjects() {
     }
 
     for (var key in obstacles) {
-        obstacleMove(obstacles[key]); 
+        obstacleMove(obstacles[key]);
     }
 }
 
+// Move obstacles horizontally based on their type (left or right)
 export function obstacleMove(obstacle) {
     if (obstacle.gameObjectType == "obstacleRight") {
         if (obstacle.x < gameWindow.width + 100) {

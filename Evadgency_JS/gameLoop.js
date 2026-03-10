@@ -1,9 +1,13 @@
+// This module manages the main game loop, state, input handling, collision detection, and win/lose logic.
+// It coordinates rendering, animation, and UI updates.
+
 import { gameObject, collectables, staticObjects, player } from "./gameObjects.js";
 import { animateGameObjects } from "./animator.js";
 import * as render from "./renderResources.js";
 
 export var gameStart, timeSet;
 
+// Global game state object holding key variables like difficulty, score, time, lives, etc.
 export var gameMaster = {
     difficulty: 1,
     score: 0,
@@ -16,12 +20,14 @@ export var gameMaster = {
 
 var playerPosX, playerPosY;
 
+// Initialize game on window load: update UI, set up objects, start loop
 window.onload = function () {
   updateUIElements();
   initialize();
   console.log("Game loaded!");
 }
 
+// Start the countdown timer (decrements time every second)
 export function timer() {
   timeSet = setInterval(countDown, 1000);
 
@@ -32,13 +38,13 @@ export function timer() {
   }
 }
 
-//intialize after pages load.
+// Initialize game objects and start the update loop
 function initialize() {
   render.initObjects();
   update();
 }
 
-// Game Logic Updates
+// Main game update loop: clears canvas, draws elements, animates, checks conditions
 export function update() {
     gameStart = requestAnimationFrame(update);
     render.ctx.clearRect(0, 0, gameWindow.width, gameWindow.height); //Clears sprites every frame
@@ -50,34 +56,40 @@ export function update() {
     checkLose();
 }
 
-//controllers
+// Event listener for keyboard input to control player movement and actions
 document.addEventListener("keydown", playerController, false);
 
 function playerController(e) {
     playerPosX = player.x;
     playerPosY = player.y;
+    // Move up (arrow up or W), check bounds and game state
     if ((e.keyCode == 38 || e.keyCode == 87) && player.y > 16 && gameMaster.gameOn == true) {
         player.y = player.y - player.spd;
         player.sx = 0; // up
-    } 
+    }
+    // Move down (arrow down or S)
     if ((e.keyCode == 40 || e.keyCode == 83) && player.y < 608 && gameMaster.gameOn == true) {
         player.y = player.y + player.spd;
         player.sx = 128; // down
     }
+    // Move left (arrow left or A)
     if ((e.keyCode == 37 || e.keyCode == 65) && player.x > 16 && gameMaster.gameOn == true) {
         player.x = player.x - player.spd;
         player.sx = 256; // left
     }
+    // Move right (arrow right or D)
     if ((e.keyCode == 39 || e.keyCode == 68) && player.x < 608 && gameMaster.gameOn == true) {
         player.x = player.x + player.spd;
         player.sx = 320; // right
     }
+    // Press P to cycle player avatar sprites
     if (e.keyCode == 80) { //Press P to select a different avatar
         player.sy += 64;
         if (player.sy > 64 * 4) {
             player.sy = 64;
         }
     }
+    // Press Esc to pause/unpause game
     if (e.keyCode == 27) { //Press Esc to pause game
         if (gameMaster.gameOn == true) {
             gameMaster.gameOn = false;
@@ -98,11 +110,12 @@ function playerController(e) {
     console.log(player.x + " - " + player.y);
 }
 
-//Colliders
+// Collision detection function: checks if player overlaps with an object and handles consequences
 export function collideWith(object) {
 
     if (player.x <= object.x + object.width / 2 && player.x >= object.x - object.width / 2 && player.y <= object.y + object.height / 2 && player.y >= object.y - object.height / 2) {
         if (object.gameObjectType.includes("obstacle")) {
+            // Hit obstacle: lose a life, reset player position briefly
             gameMaster.lives -= 1;
             player.sx = 64 * 4;
             player.sy = 64 * 5;
@@ -118,6 +131,7 @@ export function collideWith(object) {
             document.getElementById('lives').innerHTML = gameMaster.lives;
 
         } else if (object.gameObjectType.includes("collectable")) {
+            // Collected coin: remove from array, increase score and coins
             collectables.splice(collectables.indexOf(object), 1);
             gameMaster.coins += 1;
             gameMaster.score += 1;
@@ -126,13 +140,14 @@ export function collideWith(object) {
             document.getElementById('coins').innerHTML = gameMaster.coins
 
         } else if (object.gameObjectType.includes("staticObject")) {
+            // Hit static object: revert player position (wall-like)
             player.x = playerPosX;
             player.y = playerPosY;
         }
     }
 }
 
-// win/lose states
+// Check win conditions: player reaches top row at specific x positions to score victory points
 function checkWin() {
   var winPos = [32, 96, 160, 224, 288, 352, 416, 480, 544];
 
@@ -144,6 +159,7 @@ function checkWin() {
     gameMaster.score += 100;
     gameMaster.victoryPoints--;
   } else if (gameMaster.victoryPoints == 0) {
+    // All victory points collected: pause and show next level menu
     isPause();
     document.getElementById("next").className = "button";
     document.getElementById("resume").className = "hidden";
@@ -153,6 +169,7 @@ function checkWin() {
   }
 }
 
+// Check lose conditions: no lives or time up triggers game over
 function checkLose() {
     if (gameMaster.lives == 0 || gameMaster.time <= 0) {
         isPause();
@@ -162,12 +179,14 @@ function checkLose() {
         }, 5000);
     }
 }
-//pause game
+
+// Pause the game by stopping animation and timer
 function isPause() {
   cancelAnimationFrame(gameStart);
   clearInterval(timeSet);
 }
 
+// Update UI elements with current game state values
 export function updateUIElements() {
   document.getElementById('lives').innerHTML = gameMaster.lives;
   document.getElementById('time').innerHTML = gameMaster.time;
