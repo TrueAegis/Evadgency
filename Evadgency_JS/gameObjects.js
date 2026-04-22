@@ -1,8 +1,7 @@
 // This module defines game objects, including the player, obstacles, collectables, and static objects.
 // It provides constructors and initialization functions for populating the game world.
 
-import { gameMaster, timer, updateUIElements, update } from "./gameLoop.js";
-import { initObjects } from "./renderResources.js";
+import { gameMaster } from "./gameLoop.js";
 import { rollChance, getRandomInt } from "./util.js";
 
 // Arrays to hold different types of game objects
@@ -116,10 +115,12 @@ export function initCollectables() {
 }
 
 // Advance to the next level: increase difficulty, reset objects, restart game loop
-export function nextLevel() {
+// nextLevel receives its dependencies as parameters to avoid a circular import
+// with gameLoop.js. menuFunctions.js calls this and passes them in.
+export function nextLevel(gameMaster, timer, updateUIElements, update, initObjects) {
     gameMaster.gameOn = true;
     gameMaster.difficulty += 1;
-    gameMaster.victoryPoints = gameMaster.difficulty; //Needs to be initialized on start of game
+    gameMaster.victoryPoints = gameMaster.difficulty;
     updateUIElements();
     obstacles = [];
     collectables = [];
@@ -130,4 +131,3 @@ export function nextLevel() {
     document.getElementById("wrapper").style.display = "none";
     console.log(laneSpeed);
 };
-

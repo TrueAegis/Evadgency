@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Evadgency</title>
+    <title>Evadgency (dev)</title>
     <link rel="stylesheet" href="styles.css">
     <link rel='icon' href='./favicon.ico?' type='image/x-icon'>
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -38,8 +38,9 @@
     </div>
   </div>
   <canvas id="gameWindow" width="640" height="640" style="border: 1px solid #000000;"></canvas>
-<script src="evadgency.bundle.js"></script>
+<!-- DEV: loads modules directly, no build step needed -->
+<script type="module" src="Evadgency_JS/gameLoop.js"></script>
+<script type="module" src="Evadgency_JS/menuFunctions.js"></script>
 </body>
-
 
 </html>
