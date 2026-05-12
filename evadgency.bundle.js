@@ -401,7 +401,7 @@
 
       // Checks for win conditions
       if (player.y == 64 && winPos.includes(player.x)) {
-        new gameObject(staticObjects, "staticObject", 'sprites/SpriteSheet.png', player.sx, player.sy, player.srcW, player.srcH, player.x, player.y, null, player.width, player.height);
+        new gameObject(staticObjects, "staticObject", 'sprites/spritesheet.png', player.sx, player.sy, player.srcW, player.srcH, player.x, player.y, null, player.width, player.height);
         player.x = 320;
         player.y = 576;
         gameMaster.score += 100;
