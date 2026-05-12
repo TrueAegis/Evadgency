@@ -1,14 +1,17 @@
 // This module handles menu button interactions and game state changes.
 // It sets up event listeners for menu buttons and defines functions to start, resume, or advance the game.
 
-import { gameMaster, timer, update } from "./gameLoop.js";
+import { gameMaster, timer, update, updateUIElements } from "./gameLoop.js";
 import { nextLevel } from "./gameObjects.js";
+import { initObjects } from "./renderResources.js";
 
 document.getElementById("start").focus();
 
 // Set up event listeners for menu buttons
 document.getElementById("start").addEventListener("click", start);
-document.getElementById("next").addEventListener("click", nextLevel);
+document.getElementById("next").addEventListener("click", function() {
+    nextLevel(gameMaster, timer, updateUIElements, update, initObjects);
+});
 document.getElementById("how").addEventListener("click", howto);
 document.getElementById("resume").addEventListener("click", resume);
 

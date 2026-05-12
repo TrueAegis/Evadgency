@@ -61,8 +61,10 @@
     // Initialize moving obstacles based on difficulty (spawn in lanes, random direction and speed)
     function initObstacles() {
         var laneSpawn = [96, 160, 192, 224, 451, 483, 515, 547, 288, 320, 352, 384];
-        {
+        if (gameMaster.difficulty === 1) {
             laneSpeed = 1;
+        } else {
+            laneSpeed = gameMaster.difficulty - (gameMaster.difficulty - 1) + (gameMaster.difficulty / 5);
         }
         for (var ii = 0; ii < increaseSpawn(gameMaster.difficulty); ii++) {
             for (var i = 0; i < laneSpawn.length; i++) {
@@ -78,8 +80,11 @@
         // Helper to increase obstacle spawn count with difficulty
         function increaseSpawn(input) {
             console.log("GameDifficulty: " + input);
-            {
+            var result = input / 5;
+            if (result < 1) {
                 return 1;
+            } else {
+                return Math.floor(result);
             }
         }
         console.log(increaseSpawn(gameMaster.difficulty));
@@ -446,7 +451,9 @@
 
     // Set up event listeners for menu buttons
     document.getElementById("start").addEventListener("click", start);
-    document.getElementById("next").addEventListener("click", nextLevel);
+    document.getElementById("next").addEventListener("click", function() {
+        nextLevel(gameMaster, timer, updateUIElements, update, initObjects);
+    });
     document.getElementById("how").addEventListener("click", howto);
     document.getElementById("resume").addEventListener("click", resume);
 
